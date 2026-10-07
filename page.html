@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件校验工具 · File Checksum Tool</title>
+<meta name="description" content="Generate file checksums, download checksum lists, and verify received files. English, Simplified Chinese and Traditional Chinese. Files stay on your device.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233e49d8'/%3E%3Cpath d='M10 7h8l5 5v13H10zM18 7v6h5M13 19l3 3 5-6' fill='none' stroke='white' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!-- STYLE -->
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" class="svg-definitions" aria-hidden="true"><symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6zM14 3v6h5M9 15l3 3 5-6"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V5h6l2 2h10v13H3zM3 10h18"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3m-4 5v2"/></symbol><symbol id="i-generate" viewBox="0 0 24 24"><path d="M9 3L6 21M18 3l-3 18M3 9h18M2 15h18"/></symbol><symbol id="i-verify" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 16v5h16v-5"/></symbol></svg>
+<header class="topbar"><div class="top-inner"><div class="brand"><span class="mark"><svg class="icon"><use href="#i-file"/></svg></span><span data-i18n="brandTitle">文件校验工具</span></div><div class="language-control"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><label class="sr-only" for="lang" data-i18n="languageLabel">界面语言</label><select id="lang"><option value="en" lang="en">English</option><option value="zh" lang="zh-CN" selected>简体中文</option><option value="zh-Hant" lang="zh-Hant">繁體中文</option></select></div></div></header>
+<main>
+<div class="intro"><div><h1 data-i18n="title">生成校验值，核验文件是否改变</h1><p class="sub" data-i18n="subtitle">选择文件，其余交给工具。校验值与检查结果都可以保存。</p></div><div class="local"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="local">本地处理 · 文件不上传</span></div></div>
+<nav class="tabs" role="tablist" data-i18n-aria="workflowLabel" aria-label="操作选择">
+<button class="tab" id="tab-create" role="tab" aria-selected="true" aria-controls="panel-create" data-mode="create"><span class="tab-icon"><svg class="icon" aria-hidden="true"><use href="#i-generate"/></svg></span><span class="tab-copy"><strong data-i18n="tabCreate">生成校验值</strong><span data-i18n="tabCreateHint">为文件创建 checksum 与清单</span></span><span class="tab-check" aria-hidden="true">✓</span></button>
+<button class="tab" id="tab-verify" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-verify" data-mode="verify"><span class="tab-icon"><svg class="icon" aria-hidden="true"><use href="#i-verify"/></svg></span><span class="tab-copy"><strong data-i18n="tabVerify">核验文件</strong><span data-i18n="tabVerifyHint">与原有清单比较，检查文件变化</span></span><span class="tab-check" aria-hidden="true">✓</span></button>
+</nav>
+<div class="layout"><section class="workspace" data-i18n-aria="workspaceLabel" aria-label="文件校验工作区">
+<div class="panel" role="tabpanel" id="panel-create" aria-labelledby="tab-create">
+<div class="panel-heading"><div><h2 data-i18n="createTitle">选择要生成校验值的文件</h2><p class="section-desc" data-i18n="createDesc">支持单个文件、多个文件或整个文件夹。</p></div><span class="algorithm">SHA-256</span></div>
+<div class="dropzone" id="create-drop"><span class="upload-icon"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg></span><h3 data-i18n="dropTitle">把文件拖到这里</h3><p data-i18n="dropHint">或从你的设备中选择</p><div class="actions center"><button class="btn secondary" id="create-files"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg><span data-i18n="chooseFiles">选择文件</span></button><button class="btn subtle" id="create-folder" data-i18n="chooseFolder">选择整个文件夹</button></div></div>
+<input id="create-folder-input" type="file" class="file-input" webkitdirectory multiple><input id="create-files-input" type="file" class="file-input" multiple><div class="selection" id="create-selection" aria-live="polite"></div>
+<div class="output-summary"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><p data-i18n="createHint">每个文件生成一个 SHA-256 校验值，可复制或下载完整清单。</p></div>
+<div class="runbar"><button class="quiet" id="create-reset" data-i18n="reset">清空选择</button><button class="btn primary" id="create-button" disabled data-i18n="createButton">生成校验值</button></div>
+</div>
+<div class="panel" role="tabpanel" id="panel-verify" aria-labelledby="tab-verify" hidden>
+<div class="panel-heading"><div><h2 data-i18n="verifyTitle">核验收到的文件</h2><p class="section-desc" data-i18n="verifyDesc">将现在的文件与发送前保存的校验清单比较。</p></div><span class="algorithm">SHA-256 / 512</span></div>
+<div class="step"><span class="number">01</span><div class="step-content"><h3 data-i18n="manifestTitle">提供原有校验清单</h3><p class="hint" data-i18n="manifestHint">可选择多份 TXT 清单。若下一步选择完整保存包，将自动读取其中的清单。</p><button class="btn secondary" id="choose-manifests" data-i18n="chooseManifests">选择校验清单</button><input id="manifest-input" type="file" class="file-input" multiple accept=".txt,.sha256,.sha512"><div id="manifest-selection" class="selection" aria-live="polite"></div></div></div>
+<div class="step"><span class="number">02</span><div class="step-content"><h3 data-i18n="filesTitle">选择待核验的文件</h3><div class="dropzone compact" id="verify-drop"><span class="upload-icon"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg></span><div class="actions center"><button class="btn secondary" id="choose-folder" data-i18n="chooseFolder">选择整个文件夹</button><button class="btn subtle" id="choose-files" data-i18n="chooseFiles">选择文件</button></div><p data-i18n="verifyDropHint">也可以将单个文件拖到这里</p></div><input id="folder-input" class="file-input" type="file" webkitdirectory multiple><input id="files-input" class="file-input" type="file" multiple><div class="path-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><p data-i18n="rootHint">核验完整保存包时，请选择包含 data 和 manifest 的最外层文件夹。逐个选择文件会丢失目录路径。ZIP 请先解压。</p></div><div id="files-selection" class="selection" aria-live="polite"></div></div></div>
+<div class="runbar"><button class="quiet" id="verify-reset" data-i18n="reset">清空选择</button><button class="btn primary" id="verify-button" disabled data-i18n="verifyButton">开始核验</button></div>
+<details class="support"><summary data-i18n="supportTitle">支持的格式与核验范围</summary><p data-i18n="supportDesc">支持 UTF-8 TXT、SHA-256 和 SHA-512，包括 BagIt 的 payload manifest 和 tag manifest。按完整相对路径匹配，区分大小写。本工具检查清单中记录的字节一致性，不判断整个 BagIt 包是否合规。</p></details>
+</div>
+<div id="feedback-wrap" hidden><div class="notice" id="error" role="alert" hidden></div><div class="progress" id="progress" hidden><div class="progress-line"><span class="progress-label" id="progress-label" role="status"></span><button class="quiet" id="cancel" data-i18n="cancel">取消</button></div><progress id="progress-bar" max="100" value="0"></progress></div><section class="result" id="result" aria-live="polite" hidden></section></div>
+</section>
+<aside class="side">
+<div class="guide"><span class="aside-icon"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span><h2 data-i18n="privacyTitle">文件留在你的设备上</h2><p data-i18n="privacyText">计算在浏览器中完成。照片、视频和文档都不会上传到服务器。</p></div>
+<div class="aside-card" id="create-advice"><h3 data-i18n="createAdviceTitle">保存好这份清单</h3><p data-i18n="createNote">在发送文件前生成清单，与文件一起提供给接收方，并另存一份可信副本。</p><div class="aside-divider"></div><p class="small-note" data-i18n="createAdviceText">之后选择“核验文件”，用这份清单检查文件是否改变。</p></div>
+<div class="aside-card" id="verify-advice" hidden><h3 data-i18n="legendTitle">校验结果怎么读</h3><div class="legend-item"><span class="legend-symbol match">✓</span><div><span data-i18n="match">内容一致</span><small data-i18n="matchDesc">与清单记录的校验值相同。</small></div></div><div class="legend-item"><span class="legend-symbol changed">≠</span><div><span data-i18n="changed">内容不同</span><small data-i18n="changedDesc">校验值不同，需与发送方核查。</small></div></div><div class="legend-item"><span class="legend-symbol missing">!</span><div><span data-i18n="missing">未找到文件</span><small data-i18n="missingDesc">可能未选中、被改名或缺失。</small></div></div><div class="legend-item"><span class="legend-symbol unlisted">?</span><div><span data-i18n="unlisted">清单未记录</span><small data-i18n="unlistedDesc">没有可用的原始值进行比较。</small></div></div></div>
+<details class="limit-card"><summary data-i18n="limitTitle">核验结果能说明什么？</summary><p data-i18n="limitText">通过检查，是字节未变的有力证据；不能证明来源、描述或版权正确，也不能代替接收决定。结论以原有清单可信为前提。</p></details>
+</aside></div>
+<footer class="foot"><span data-i18n="footer">关闭页面会清除本次选择。请下载并保留需要的清单或报告。</span><a href="https://www.rfc-editor.org/rfc/rfc8493.html" target="_blank" rel="noopener" data-i18n="referenceLabel">格式参考：BagIt / RFC 8493</a></footer>
+</main>
+<!-- HASH_BUNDLE -->
+<!-- CORE -->
+<!-- TRANSLATIONS -->
+<!-- APP -->
+</body></html>
